@@ -1,6 +1,5 @@
 import { useState } from "react";
-
-const API_URL = "https://center-kitchen-backend.onrender.com/catalog";
+import { API_URL, CLOUD_NAME, UPLOAD_PRESET } from "../constants/api";
 
 const initialForm = {
   partNo: "",
@@ -20,6 +19,8 @@ const initialForm = {
 
 export default function AddProductForm() {
   const [form, setForm] = useState(initialForm);
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(null);
@@ -34,6 +35,33 @@ export default function AddProductForm() {
     }
   };
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setImageFile(file);
+    setImagePreview(URL.createObjectURL(file));
+  };
+
+  const uploadToCloudinary = async (file) => {
+    const data = new FormData();
+    data.append("file", file);
+    data.append("upload_preset", UPLOAD_PRESET);
+
+    const res = await fetch(
+      `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
+      { method: "POST", body: data }
+    );
+
+    const result = await res.json();
+
+    if (result.error) throw new Error(result.error.message);
+
+    return {
+      main: result.secure_url,
+      thumbnail: result.secure_url.replace("/upload/", "/upload/w_200,h_200,c_fill/"),
+    };
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -41,11 +69,17 @@ export default function AddProductForm() {
     setSuccess(false);
 
     try {
+      let photo = { main: "", thumbnail: "" };
+      if (imageFile) {
+        photo = await uploadToCloudinary(imageFile);
+      }
+
       const res = await fetch(API_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...form,
+          photo,
           spec: {
             ...form.spec,
             lengthMm: form.spec.lengthMm ? Number(form.spec.lengthMm) : undefined,
@@ -61,6 +95,8 @@ export default function AddProductForm() {
 
       setSuccess(true);
       setForm(initialForm);
+      setImageFile(null);
+      setImagePreview(null);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -92,41 +128,42 @@ export default function AddProductForm() {
 
         <form onSubmit={handleSubmit} className="space-y-8">
 
+          {/* Image Upload */}
+          <div>
+            <h2 className="text-xs tracking-widest text-amber-500 uppercase mb-4 border-b border-neutral-800 pb-2">
+              Photo
+            </h2>
+            <label className="flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-neutral-700 rounded-lg cursor-pointer hover:border-amber-500 transition-colors bg-neutral-900">
+              {imagePreview ? (
+                <img
+                  src={imagePreview}
+                  className="h-full w-full object-contain rounded-lg p-2"
+                />
+              ) : (
+                <div className="text-center">
+                  <p className="text-neutral-500 text-sm">Click to upload image</p>
+                  <p className="text-neutral-600 text-xs mt-1">PNG, JPG, WEBP</p>
+                </div>
+              )}
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                className="hidden"
+              />
+            </label>
+          </div>
+
           {/* Basic Info */}
           <div>
             <h2 className="text-xs tracking-widest text-amber-500 uppercase mb-4 border-b border-neutral-800 pb-2">
               Basic Info
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <Field
-                label="Part No *"
-                name="partNo"
-                value={form.partNo}
-                onChange={handleChange}
-                required
-                placeholder="e.g. BT-001"
-              />
-              <Field
-                label="Name"
-                name="name"
-                value={form.name}
-                onChange={handleChange}
-                placeholder="e.g. Hex Bolt"
-              />
-              <Field
-                label="Category"
-                name="category"
-                value={form.category}
-                onChange={handleChange}
-                placeholder="e.g. Bolt"
-              />
-              <Field
-                label="Type"
-                name="type"
-                value={form.type}
-                onChange={handleChange}
-                placeholder="e.g. Hex"
-              />
+              <Field label="Part No *"  name="partNo"    value={form.partNo}    onChange={handleChange} required placeholder="e.g. BT-001" />
+              <Field label="Name"       name="name"      value={form.name}      onChange={handleChange} placeholder="e.g. Hex Bolt" />
+              <Field label="Category"   name="category"  value={form.category}  onChange={handleChange} placeholder="e.g. Bolt" />
+              <Field label="Type"       name="type"      value={form.type}      onChange={handleChange} placeholder="e.g. Hex" />
             </div>
           </div>
 
@@ -136,57 +173,13 @@ export default function AddProductForm() {
               Specifications
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <Field
-                label="Standard"
-                name="spec.standard"
-                value={form.spec.standard}
-                onChange={handleChange}
-                placeholder="e.g. ISO, DIN"
-              />
-              <Field
-                label="Diameter"
-                name="spec.diameter"
-                value={form.spec.diameter}
-                onChange={handleChange}
-                placeholder="e.g. M8"
-              />
-              <Field
-                label="Length (mm)"
-                name="spec.lengthMm"
-                type="number"
-                value={form.spec.lengthMm}
-                onChange={handleChange}
-                placeholder="e.g. 30"
-              />
-              <Field
-                label="Thread Pitch"
-                name="spec.threadPitch"
-                type="number"
-                value={form.spec.threadPitch}
-                onChange={handleChange}
-                placeholder="e.g. 1.25"
-              />
-              <Field
-                label="Grade"
-                name="spec.grade"
-                value={form.spec.grade}
-                onChange={handleChange}
-                placeholder="e.g. 8.8"
-              />
-              <Field
-                label="Material"
-                name="spec.material"
-                value={form.spec.material}
-                onChange={handleChange}
-                placeholder="e.g. Steel"
-              />
-              <Field
-                label="Coating"
-                name="spec.coating"
-                value={form.spec.coating}
-                onChange={handleChange}
-                placeholder="e.g. Zinc"
-              />
+              <Field label="Standard"      name="spec.standard"    value={form.spec.standard}    onChange={handleChange} placeholder="e.g. ISO, DIN" />
+              <Field label="Diameter"      name="spec.diameter"    value={form.spec.diameter}    onChange={handleChange} placeholder="e.g. M8" />
+              <Field label="Length (mm)"   name="spec.lengthMm"    value={form.spec.lengthMm}    onChange={handleChange} type="number" placeholder="e.g. 30" />
+              <Field label="Thread Pitch"  name="spec.threadPitch" value={form.spec.threadPitch} onChange={handleChange} type="number" placeholder="e.g. 1.25" />
+              <Field label="Grade"         name="spec.grade"       value={form.spec.grade}       onChange={handleChange} placeholder="e.g. 8.8" />
+              <Field label="Material"      name="spec.material"    value={form.spec.material}    onChange={handleChange} placeholder="e.g. Steel" />
+              <Field label="Coating"       name="spec.coating"     value={form.spec.coating}     onChange={handleChange} placeholder="e.g. Zinc" />
             </div>
           </div>
 
@@ -196,7 +189,7 @@ export default function AddProductForm() {
             disabled={loading}
             className="w-full py-3 bg-amber-500 hover:bg-amber-400 disabled:bg-neutral-700 disabled:text-neutral-500 text-neutral-950 font-bold tracking-widest rounded-lg transition-colors"
           >
-            {loading ? "Saving..." : "Add Product"}
+            {loading ? "Uploading & Saving..." : "Add Product"}
           </button>
 
         </form>

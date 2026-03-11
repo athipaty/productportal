@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { API_URL } from "../constants/api";
-import ProductCard from "./catalog/ProductCard";
-import EditModal from "./catalog/EditModal";
+import { API_URL } from "../../constants/api";
+import ProductCard from "./ProductCard";
+import EditModal from "./EditModal";
 
 export default function ProductList() {
   const [products, setProducts] = useState([]);
@@ -21,10 +21,10 @@ export default function ProductList() {
         setLoading(false);
       });
   };
-
   useEffect(() => {
     fetchProducts();
   }, []);
+
   if (loading)
     return (
       <div className="fixed inset-0 bg-neutral-950 flex items-center justify-center">
