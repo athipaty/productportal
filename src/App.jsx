@@ -3,38 +3,160 @@ import AddProductForm from "./components/AddProductForm";
 import ProductList from "./components/catalog/ProductList";
 import UploadExcel from "./components/catalog/UploadExcel";
 
+const CATEGORY_TYPES = {
+  Fastener: ["All", "Bolt", "Nut", "Screw", "Stud"],
+  Washer:   ["All", "Washer"],
+  Pin:      ["All", "Pin"],
+  Ring:     ["All", "Ring"],
+  Rivet:    ["All", "Rivet"],
+  Insert:   ["All", "Insert"],
+  Collar:   ["All", "Collar"],
+  Other:    ["All"],
+};
+
+const CATEGORIES = ["All", ...Object.keys(CATEGORY_TYPES)];
+
+const NAV = [
+  { key: "list",   label: "Catalog",      icon: "◈" },
+  { key: "add",    label: "Add Product",  icon: "+" },
+  { key: "upload", label: "Upload Excel", icon: "↑" },
+];
+
 export default function App() {
   const [tab, setTab] = useState("list");
+  const [category, setCategory] = useState("All");
+  const [type, setType] = useState("All");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  const tabs = [
-    { key: "list", label: "Products" },
-    { key: "add", label: "Add Product" },
-    { key: "upload", label: "Upload Excel" },
-  ];
+  const handleCategoryClick = (cat) => {
+    setCategory(cat);
+    setType("All");
+    setSidebarOpen(false);
+  };
+
+  const handleTypeClick = (t) => {
+    setType(t);
+    setSidebarOpen(false);
+  };
+
+  const types = category !== "All" ? CATEGORY_TYPES[category] || ["All"] : null;
 
   return (
-    <div className="min-h-screen bg-neutral-950">
-      {/* Tab Nav */}
-      <div className="border-b border-neutral-800 px-8 pt-6 flex gap-6">
-        {tabs.map(({ key, label }) => (
+    <div className="flex min-h-screen bg-neutral-950">
+
+      {/* Mobile overlay */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-60 z-20 lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
+      {/* Sidebar */}
+      <aside className={`
+        fixed lg:static inset-y-0 left-0 z-30
+        w-56 bg-neutral-900 border-r border-neutral-800
+        flex flex-col transition-transform duration-300
+        ${sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
+      `}>
+
+        {/* Logo */}
+        <div className="px-5 py-6 border-b border-neutral-800">
+          <p className="text-amber-500 text-xs tracking-widest mb-1">PRODUCT</p>
+          <h1 className="text-stone-100 text-xl font-bold tracking-wide">Portal</h1>
+        </div>
+
+        {/* Main Nav */}
+        <nav className="px-3 py-4 border-b border-neutral-800">
+          <p className="text-neutral-600 text-xs tracking-widest px-2 mb-2">MENU</p>
+          {NAV.map(({ key, label, icon }) => (
+            <button
+              key={key}
+              onClick={() => { setTab(key); setSidebarOpen(false); }}
+              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors mb-1
+                ${tab === key
+                  ? "bg-amber-500/10 text-amber-400 border border-amber-500/20"
+                  : "text-neutral-400 hover:text-stone-200 hover:bg-neutral-800"
+                }`}
+            >
+              <span className="text-base w-4 text-center">{icon}</span>
+              {label}
+            </button>
+          ))}
+        </nav>
+
+        {/* Category + Type Filter */}
+        {tab === "list" && (
+          <nav className="px-3 py-4 flex-1 overflow-y-auto">
+
+            {/* Categories */}
+            <p className="text-neutral-600 text-xs tracking-widest px-2 mb-2">CATEGORY</p>
+            {CATEGORIES.map((cat) => (
+              <div key={cat}>
+                <button
+                  onClick={() => handleCategoryClick(cat)}
+                  className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-colors mb-0.5
+                    ${category === cat && type === "All"
+                      ? "bg-amber-500 text-neutral-950 font-bold"
+                      : category === cat
+                      ? "bg-amber-500/10 text-amber-400 border border-amber-500/20"
+                      : "text-neutral-400 hover:text-stone-200 hover:bg-neutral-800"
+                    }`}
+                >
+                  <span>{cat}</span>
+                  {cat !== "All" && (
+                    <span className={`text-xs transition-transform duration-200 ${category === cat ? "rotate-90" : ""}`}>
+                      ›
+                    </span>
+                  )}
+                </button>
+
+                {/* Expanded types */}
+                {category === cat && cat !== "All" && types && (
+                  <div className="ml-3 pl-3 border-l border-neutral-800 mb-1">
+                    {types.filter(t => t !== "All").map((t) => (
+                      <button
+                        key={t}
+                        onClick={() => handleTypeClick(t)}
+                        className={`w-full text-left px-3 py-1.5 rounded-lg text-xs transition-colors mb-0.5
+                          ${type === t
+                            ? "bg-amber-500 text-neutral-950 font-bold"
+                            : "text-neutral-500 hover:text-stone-200 hover:bg-neutral-800"
+                          }`}
+                      >
+                        {t}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
+          </nav>
+        )}
+      </aside>
+
+      {/* Main content */}
+      <div className="flex-1 flex flex-col min-w-0">
+
+        {/* Mobile topbar */}
+        <div className="lg:hidden flex items-center gap-4 px-4 py-3 border-b border-neutral-800 bg-neutral-900">
           <button
-            key={key}
-            onClick={() => setTab(key)}
-            className={`pb-3 text-sm tracking-widest uppercase transition-colors ${
-              tab === key
-                ? "text-amber-500 border-b-2 border-amber-500"
-                : "text-neutral-500 hover:text-stone-300"
-            }`}
+            onClick={() => setSidebarOpen(true)}
+            className="text-neutral-400 hover:text-stone-200 text-xl"
           >
-            {label}
+            ☰
           </button>
-        ))}
+          <span className="text-amber-500 text-sm tracking-widest font-bold">PRODUCT PORTAL</span>
+        </div>
+
+        {/* Page content */}
+        <div className="flex-1">
+          {tab === "list"   && <ProductList category={category} type={type} />}
+          {tab === "add"    && <AddProductForm />}
+          {tab === "upload" && <UploadExcel onUploaded={() => setTab("list")} />}
+        </div>
       </div>
 
-      {/* Content */}
-      {tab === "list" && <ProductList />}
-      {tab === "add" && <AddProductForm />}
-      {tab === "upload" && <UploadExcel onUploaded={() => setTab("list")} />}
     </div>
   );
 }
