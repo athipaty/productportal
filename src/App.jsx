@@ -1,35 +1,34 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useEffect, useState } from "react";
 
-function App() {
-  const [count, setCount] = useState(0)
+export default function App() {
+  const [dots, setDots] = useState(0);
+
+  useEffect(() => {
+    const id = setInterval(() => setDots(d => (d + 1) % 6), 400);
+    return () => clearInterval(id);
+  }, []);
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <div className="fixed inset-0 bg-neutral-950 flex items-center justify-center">
+      <style>{`@import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400&display=swap');`}</style>
 
-export default App
+      <div className="flex items-center">
+        <span className="text-2xl font-bold text-stone-200 tracking-widest text-orange-400">
+          On plan
+        </span>
+
+        <span className="ml-1 flex items-center gap-1">
+          {[0,1,2,3,4].map(i => (
+            <span
+              key={i}
+              className="text-2xl font-bold text-amber-500"
+              style={{ opacity: i < dots ? 1 : 0 }}
+            >
+              .
+            </span>
+          ))}
+        </span>
+      </div>
+    </div>
+  );
+}
