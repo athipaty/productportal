@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-const API_URL = "https://center-kitchen-backend.onrender.com/catalog"; // change to your backend URL
+const API_URL = "https://center-kitchen-backend.onrender.com/catalog";
 
 export default function ProductList() {
   const [products, setProducts] = useState([]);
