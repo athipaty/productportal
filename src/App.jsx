@@ -1,34 +1,40 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import AddProductForm from "./components/AddProductForm";
+import ProductList from "./components/ProductList";
 
 export default function App() {
-  const [dots, setDots] = useState(0);
-
-  useEffect(() => {
-    const id = setInterval(() => setDots(d => (d + 1) % 6), 400);
-    return () => clearInterval(id);
-  }, []);
+  const [tab, setTab] = useState("list");
 
   return (
-    <div className="fixed inset-0 bg-neutral-950 flex items-center justify-center">
-      <style>{`@import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400&display=swap');`}</style>
+    <div className="min-h-screen bg-neutral-950">
 
-      <div className="flex items-center">
-        <span className="text-2xl font-bold text-stone-200 tracking-widest text-orange-400">
-          On plan
-        </span>
-
-        <span className="ml-1 flex items-center gap-1">
-          {[0,1,2,3,4].map(i => (
-            <span
-              key={i}
-              className="text-2xl font-bold text-amber-500 text-white"
-              style={{ opacity: i < dots ? 1 : 0 }}
-            >
-              .
-            </span>
-          ))}
-        </span>
+      {/* Tab Nav */}
+      <div className="border-b border-neutral-800 px-8 pt-6 flex gap-6">
+        <button
+          onClick={() => setTab("list")}
+          className={`pb-3 text-sm tracking-widest uppercase transition-colors ${
+            tab === "list"
+              ? "text-amber-500 border-b-2 border-amber-500"
+              : "text-neutral-500 hover:text-stone-300"
+          }`}
+        >
+          Products
+        </button>
+        <button
+          onClick={() => setTab("add")}
+          className={`pb-3 text-sm tracking-widest uppercase transition-colors ${
+            tab === "add"
+              ? "text-amber-500 border-b-2 border-amber-500"
+              : "text-neutral-500 hover:text-stone-300"
+          }`}
+        >
+          Add Product
+        </button>
       </div>
+
+      {/* Content */}
+      {tab === "list" ? <ProductList /> : <AddProductForm />}
+
     </div>
   );
 }
