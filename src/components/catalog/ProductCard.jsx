@@ -10,7 +10,7 @@ export default function ProductCard({ product, onView }) {
         <div>
           <p className="text-amber-500 text-xs tracking-widest">{product.partNo}</p>
           <p className="text-stone-500 text-xs mt-0.5">
-            {product.volumePerMonth ? `${product.volumePerMonth.toLocaleString()} vol/month` : "— vol/month"}
+            {product.volumePerMonth ? `${product.volumePerMonth.toLocaleString()} pcs/month` : "— pcs/month"}
           </p>
         </div>
         <div className="text-right">
