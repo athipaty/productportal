@@ -14,10 +14,9 @@ export default function ProductList({ category = "All", type = "All" }) {
   const [refreshKey, setRefreshKey] = useState(0);
 
   const refresh = () => setRefreshKey((k) => k + 1);
-
+  
   useEffect(() => {
     const timer = setTimeout(() => {
-      setLoading(true);
       const params = new URLSearchParams();
       if (search) params.set("q", search);
       if (category && category !== "All") params.set("category", category);
@@ -41,7 +40,9 @@ export default function ProductList({ category = "All", type = "All" }) {
   if (loading)
     return (
       <div className="flex items-center justify-center h-64">
-        <p className="text-stone-400 tracking-widest animate-pulse text-sm">Loading...</p>
+        <p className="text-stone-400 tracking-widest animate-pulse text-sm">
+          Loading...
+        </p>
       </div>
     );
 
@@ -58,9 +59,15 @@ export default function ProductList({ category = "All", type = "All" }) {
       <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-6">
         <div>
           <h2 className="text-2xl font-bold text-stone-100 tracking-wide">
-            {type !== "All" ? type : category === "All" ? "All Products" : category}
+            {type !== "All"
+              ? type
+              : category === "All"
+                ? "All Products"
+                : category}
           </h2>
-          <p className="text-stone-500 text-sm mt-0.5">{products.length} items</p>
+          <p className="text-stone-500 text-sm mt-0.5">
+            {products.length} items
+          </p>
         </div>
         <input
           type="text"
@@ -95,7 +102,10 @@ export default function ProductList({ category = "All", type = "All" }) {
         <ProductDetailModal
           product={viewProduct}
           onClose={() => setViewProduct(null)}
-          onEdit={(p) => { setViewProduct(null); setEditProduct(p); }}
+          onEdit={(p) => {
+            setViewProduct(null);
+            setEditProduct(p);
+          }}
         />
       )}
 
@@ -103,8 +113,14 @@ export default function ProductList({ category = "All", type = "All" }) {
         <EditModal
           product={editProduct}
           onClose={() => setEditProduct(null)}
-          onSaved={() => { setEditProduct(null); refresh(); }}
-          onDeleted={() => { setEditProduct(null); refresh(); }}
+          onSaved={() => {
+            setEditProduct(null);
+            refresh();
+          }}
+          onDeleted={() => {
+            setEditProduct(null);
+            refresh();
+          }}
         />
       )}
     </div>
