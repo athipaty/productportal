@@ -21,7 +21,7 @@ export default function App() {
           {[0,1,2,3,4].map(i => (
             <span
               key={i}
-              className="text-2xl font-bold text-amber-500"
+              className="text-2xl font-bold text-amber-500 text-white"
               style={{ opacity: i < dots ? 1 : 0 }}
             >
               .
