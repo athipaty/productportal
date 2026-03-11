@@ -7,20 +7,14 @@ export default function ProductCard({ product, onView }) {
       className="bg-neutral-900 border border-neutral-800 rounded-lg p-5 hover:border-amber-500 transition-colors cursor-pointer"
     >
       <p className="text-amber-500 text-xs tracking-widest mb-1">{product.partNo}</p>
-      <h2 className="text-stone-100 font-semibold mb-2 truncate">
+      <h2 className="text-stone-100 font-semibold mb-3 truncate">
         {product.name || <span className="text-neutral-600 italic text-sm">No name</span>}
       </h2>
 
       {/* Customer / Supplier */}
-      <div className="flex gap-2 mb-3 flex-wrap">
+      <div className="flex gap-2 mb-4 flex-wrap">
         {product.customer && <span className="text-xs bg-neutral-800 text-amber-400 px-2 py-1 rounded">{product.customer}</span>}
         {product.supplier && <span className="text-xs bg-neutral-800 text-stone-400 px-2 py-1 rounded">{product.supplier}</span>}
-      </div>
-
-      {/* Category / Type */}
-      <div className="flex gap-2 mb-4 flex-wrap">
-        {product.category && <span className="text-xs bg-neutral-800 text-stone-400 px-2 py-1 rounded">{product.category}</span>}
-        {product.type && <span className="text-xs bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2 py-1 rounded">{product.type}</span>}
       </div>
 
       {/* Key specs */}
