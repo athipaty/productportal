@@ -6,6 +6,10 @@ const initialForm = {
   name: "",
   category: "",
   type: "",
+  customer: "", // ✅ add
+  supplier: "", // ✅ add
+  volumePerMonth: "", // ✅ add
+
   spec: {
     standard: "",
     diameter: "",
@@ -29,9 +33,9 @@ export default function AddProductForm() {
     const { name, value } = e.target;
     if (name.startsWith("spec.")) {
       const key = name.replace("spec.", "");
-      setForm(f => ({ ...f, spec: { ...f.spec, [key]: value } }));
+      setForm((f) => ({ ...f, spec: { ...f.spec, [key]: value } }));
     } else {
-      setForm(f => ({ ...f, [name]: value }));
+      setForm((f) => ({ ...f, [name]: value }));
     }
   };
 
@@ -49,7 +53,7 @@ export default function AddProductForm() {
 
     const res = await fetch(
       `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
-      { method: "POST", body: data }
+      { method: "POST", body: data },
     );
 
     const result = await res.json();
@@ -58,7 +62,10 @@ export default function AddProductForm() {
 
     return {
       main: result.secure_url,
-      thumbnail: result.secure_url.replace("/upload/", "/upload/w_200,h_200,c_fill/"),
+      thumbnail: result.secure_url.replace(
+        "/upload/",
+        "/upload/w_200,h_200,c_fill/",
+      ),
     };
   };
 
@@ -82,8 +89,12 @@ export default function AddProductForm() {
           photo,
           spec: {
             ...form.spec,
-            lengthMm: form.spec.lengthMm ? Number(form.spec.lengthMm) : undefined,
-            threadPitch: form.spec.threadPitch ? Number(form.spec.threadPitch) : undefined,
+            lengthMm: form.spec.lengthMm
+              ? Number(form.spec.lengthMm)
+              : undefined,
+            threadPitch: form.spec.threadPitch
+              ? Number(form.spec.threadPitch)
+              : undefined,
           },
         }),
       });
@@ -107,11 +118,14 @@ export default function AddProductForm() {
   return (
     <div className="min-h-screen bg-neutral-950 text-stone-200 p-8">
       <div className="max-w-2xl mx-auto">
-
         {/* Header */}
         <div className="mb-8">
-          <p className="text-amber-500 text-xs tracking-widest mb-1">PRODUCT PORTAL</p>
-          <h1 className="text-3xl font-bold tracking-wide text-stone-100">Add Product</h1>
+          <p className="text-amber-500 text-xs tracking-widest mb-1">
+            PRODUCT PORTAL
+          </p>
+          <h1 className="text-3xl font-bold tracking-wide text-stone-100">
+            Add Product
+          </h1>
         </div>
 
         {/* Alerts */}
@@ -127,7 +141,6 @@ export default function AddProductForm() {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-8">
-
           {/* Image Upload */}
           <div>
             <h2 className="text-xs tracking-widest text-amber-500 uppercase mb-4 border-b border-neutral-800 pb-2">
@@ -141,8 +154,12 @@ export default function AddProductForm() {
                 />
               ) : (
                 <div className="text-center">
-                  <p className="text-neutral-500 text-sm">Click to upload image</p>
-                  <p className="text-neutral-600 text-xs mt-1">PNG, JPG, WEBP</p>
+                  <p className="text-neutral-500 text-sm">
+                    Click to upload image
+                  </p>
+                  <p className="text-neutral-600 text-xs mt-1">
+                    PNG, JPG, WEBP
+                  </p>
                 </div>
               )}
               <input
@@ -160,10 +177,57 @@ export default function AddProductForm() {
               Basic Info
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <Field label="Part No *"  name="partNo"    value={form.partNo}    onChange={handleChange} required placeholder="e.g. BT-001" />
-              <Field label="Name"       name="name"      value={form.name}      onChange={handleChange} placeholder="e.g. Hex Bolt" />
-              <Field label="Category"   name="category"  value={form.category}  onChange={handleChange} placeholder="e.g. Bolt" />
-              <Field label="Type"       name="type"      value={form.type}      onChange={handleChange} placeholder="e.g. Hex" />
+              <Field
+                label="Part No *"
+                name="partNo"
+                value={form.partNo}
+                onChange={handleChange}
+                required
+                placeholder="e.g. BT-001"
+              />
+              <Field
+                label="Name"
+                name="name"
+                value={form.name}
+                onChange={handleChange}
+                placeholder="e.g. Hex Bolt"
+              />
+              <Field
+                label="Category"
+                name="category"
+                value={form.category}
+                onChange={handleChange}
+                placeholder="e.g. Bolt"
+              />
+              <Field
+                label="Type"
+                name="type"
+                value={form.type}
+                onChange={handleChange}
+                placeholder="e.g. Hex"
+              />
+              <Field
+                label="Customer"
+                name="customer"
+                value={form.customer}
+                onChange={handleChange}
+                placeholder="e.g. Toyota"
+              />
+              <Field
+                label="Supplier"
+                name="supplier"
+                value={form.supplier}
+                onChange={handleChange}
+                placeholder="e.g. ABC Supply"
+              />
+              <Field
+                label="Volume / Month"
+                name="volumePerMonth"
+                type="number"
+                value={form.volumePerMonth}
+                onChange={handleChange}
+                placeholder="e.g. 500"
+              />
             </div>
           </div>
 
@@ -173,13 +237,57 @@ export default function AddProductForm() {
               Specifications
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <Field label="Standard"      name="spec.standard"    value={form.spec.standard}    onChange={handleChange} placeholder="e.g. ISO, DIN" />
-              <Field label="Diameter"      name="spec.diameter"    value={form.spec.diameter}    onChange={handleChange} placeholder="e.g. M8" />
-              <Field label="Length (mm)"   name="spec.lengthMm"    value={form.spec.lengthMm}    onChange={handleChange} type="number" placeholder="e.g. 30" />
-              <Field label="Thread Pitch"  name="spec.threadPitch" value={form.spec.threadPitch} onChange={handleChange} type="number" placeholder="e.g. 1.25" />
-              <Field label="Grade"         name="spec.grade"       value={form.spec.grade}       onChange={handleChange} placeholder="e.g. 8.8" />
-              <Field label="Material"      name="spec.material"    value={form.spec.material}    onChange={handleChange} placeholder="e.g. Steel" />
-              <Field label="Coating"       name="spec.coating"     value={form.spec.coating}     onChange={handleChange} placeholder="e.g. Zinc" />
+              <Field
+                label="Standard"
+                name="spec.standard"
+                value={form.spec.standard}
+                onChange={handleChange}
+                placeholder="e.g. ISO, DIN"
+              />
+              <Field
+                label="Diameter"
+                name="spec.diameter"
+                value={form.spec.diameter}
+                onChange={handleChange}
+                placeholder="e.g. M8"
+              />
+              <Field
+                label="Length (mm)"
+                name="spec.lengthMm"
+                value={form.spec.lengthMm}
+                onChange={handleChange}
+                type="number"
+                placeholder="e.g. 30"
+              />
+              <Field
+                label="Thread Pitch"
+                name="spec.threadPitch"
+                value={form.spec.threadPitch}
+                onChange={handleChange}
+                type="number"
+                placeholder="e.g. 1.25"
+              />
+              <Field
+                label="Grade"
+                name="spec.grade"
+                value={form.spec.grade}
+                onChange={handleChange}
+                placeholder="e.g. 8.8"
+              />
+              <Field
+                label="Material"
+                name="spec.material"
+                value={form.spec.material}
+                onChange={handleChange}
+                placeholder="e.g. Steel"
+              />
+              <Field
+                label="Coating"
+                name="spec.coating"
+                value={form.spec.coating}
+                onChange={handleChange}
+                placeholder="e.g. Zinc"
+              />
             </div>
           </div>
 
@@ -191,14 +299,21 @@ export default function AddProductForm() {
           >
             {loading ? "Uploading & Saving..." : "Add Product"}
           </button>
-
         </form>
       </div>
     </div>
   );
 }
 
-function Field({ label, name, value, onChange, type = "text", required, placeholder }) {
+function Field({
+  label,
+  name,
+  value,
+  onChange,
+  type = "text",
+  required,
+  placeholder,
+}) {
   return (
     <div className="flex flex-col gap-1">
       <label className="text-xs text-stone-400 tracking-wide">{label}</label>
