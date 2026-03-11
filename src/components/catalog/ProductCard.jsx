@@ -2,6 +2,7 @@ import { useState } from "react";
 
 export default function ProductCard({ product, onEdit }) {
   const [lightbox, setLightbox] = useState(false);
+  const s = product.spec || {};
 
   return (
     <>
@@ -21,18 +22,35 @@ export default function ProductCard({ product, onEdit }) {
         )}
 
         <p className="text-amber-500 text-xs tracking-widest mb-1">{product.partNo}</p>
-        <h2 className="text-stone-100 font-semibold text-lg mb-1">{product.name}</h2>
+        <h2 className="text-stone-100 font-semibold text-lg mb-2">
+          {product.name || <span className="text-neutral-600 italic">No name</span>}
+        </h2>
 
-        <div className="flex gap-2 mb-3">
-          {product.category && <span className="text-xs bg-neutral-800 text-stone-400 px-2 py-1 rounded">{product.category}</span>}
-          {product.type && <span className="text-xs bg-neutral-800 text-stone-400 px-2 py-1 rounded">{product.type}</span>}
+        {/* Customer / Supplier */}
+        <div className="flex gap-2 mb-2 flex-wrap">
+          {product.customer && <span className="text-xs bg-neutral-800 text-amber-400 px-2 py-1 rounded">{product.customer}</span>}
+          {product.supplier && <span className="text-xs bg-neutral-800 text-stone-400 px-2 py-1 rounded">{product.supplier}</span>}
         </div>
 
+        {/* Category / Type */}
+        <div className="flex gap-2 mb-3 flex-wrap">
+          {product.category && <span className="text-xs bg-neutral-800 text-stone-400 px-2 py-1 rounded">{product.category}</span>}
+          {product.type && <span className="text-xs bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2 py-1 rounded">{product.type}</span>}
+        </div>
+
+        {/* Spec */}
         <div className="text-xs text-stone-500 space-y-1 border-t border-neutral-800 pt-3 mb-4">
-          {product.spec?.diameter && <p>Diameter: <span className="text-stone-300">{product.spec.diameter}</span></p>}
-          {product.spec?.lengthMm && <p>Length: <span className="text-stone-300">{product.spec.lengthMm} mm</span></p>}
-          {product.spec?.material && <p>Material: <span className="text-stone-300">{product.spec.material}</span></p>}
-          {product.spec?.grade && <p>Grade: <span className="text-stone-300">{product.spec.grade}</span></p>}
+          {s.threadSize     && <p>Thread: <span className="text-stone-300">{s.threadSize}</span></p>}
+          {s.length         && <p>Length: <span className="text-stone-300">{s.length} mm</span></p>}
+          {s.outerDiameter  && <p>OD: <span className="text-stone-300">{s.outerDiameter}</span></p>}
+          {s.innerDiameter  && <p>ID: <span className="text-stone-300">{s.innerDiameter}</span></p>}
+          {s.thickness      && <p>Thickness: <span className="text-stone-300">{s.thickness} mm</span></p>}
+          {s.material       && <p>Material: <span className="text-stone-300">{s.material}</span></p>}
+          {s.headType       && <p>Head: <span className="text-stone-300">{s.headType}</span></p>}
+          {s.driveType      && <p>Drive: <span className="text-stone-300">{s.driveType}</span></p>}
+          {s.surfaceTreatment && <p>Surface: <span className="text-stone-300">{s.surfaceTreatment}</span></p>}
+          {s.grade          && <p>Grade: <span className="text-stone-300">{s.grade}</span></p>}
+          {product.volumePerMonth && <p>Vol/Month: <span className="text-stone-300">{product.volumePerMonth.toLocaleString()} pcs</span></p>}
         </div>
 
         <button
