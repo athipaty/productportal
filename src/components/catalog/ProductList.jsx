@@ -56,6 +56,7 @@ export default function ProductList() {
             key={product._id}
             product={product}
             onEdit={setEditProduct}
+            onDeleted={fetchProducts} // ✅ add this
           />
         ))}
       </div>
@@ -68,6 +69,10 @@ export default function ProductList() {
             setEditProduct(null);
             fetchProducts();
           }}
+          onDeleted={() => {
+            setEditProduct(null);
+            fetchProducts();
+          }} // ← is this line there?
         />
       )}
     </div>

@@ -7,7 +7,6 @@ export default function ProductCard({ product, onEdit }) {
     <>
       <div className="bg-neutral-900 border border-neutral-800 rounded-lg p-5 hover:border-amber-500 transition-colors">
 
-        {/* Thumbnail */}
         {product.photo?.thumbnail ? (
           <img
             src={product.photo.thumbnail}

@@ -1,13 +1,12 @@
 import { useState } from "react";
 import AddProductForm from "./components/AddProductForm";
-import ProductList from "./components/ProductList";
+import ProductList from "./components/catalog/ProductList";
 
 export default function App() {
   const [tab, setTab] = useState("list");
 
   return (
     <div className="min-h-screen bg-neutral-950">
-
       {/* Tab Nav */}
       <div className="border-b border-neutral-800 px-8 pt-6 flex gap-6">
         <button
@@ -34,7 +33,6 @@ export default function App() {
 
       {/* Content */}
       {tab === "list" ? <ProductList /> : <AddProductForm />}
-
     </div>
   );
 }

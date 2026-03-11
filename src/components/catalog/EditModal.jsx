@@ -2,7 +2,7 @@ import { useState } from "react";
 import { API_URL, CLOUD_NAME, UPLOAD_PRESET } from "../../constants/api";
 import Field from "./Field";
 
-export default function EditModal({ product, onClose, onSaved }) {
+export default function EditModal({ product, onClose, onSaved, onDeleted }) {
   const [form, setForm] = useState({
     partNo: product.partNo || "",
     name: product.name || "",
@@ -21,6 +21,8 @@ export default function EditModal({ product, onClose, onSaved }) {
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(product.photo?.main || null);
   const [loading, setLoading] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
   const [error, setError] = useState(null);
 
   const handleChange = (e) => {
@@ -84,10 +86,24 @@ export default function EditModal({ product, onClose, onSaved }) {
     }
   };
 
+  const handleDelete = async () => {
+    setDeleting(true);
+    try {
+      const res = await fetch(`${API_URL}/${product._id}`, { method: "DELETE" });
+      if (!res.ok) throw new Error("Failed to delete");
+      onDeleted();
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setDeleting(false);
+    }
+  };
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 p-4">
       <div className="bg-neutral-900 rounded-xl w-full max-w-2xl max-h-screen overflow-y-auto p-8">
 
+        {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
             <p className="text-amber-500 text-xs tracking-widest mb-1">PRODUCT PORTAL</p>
@@ -101,6 +117,8 @@ export default function EditModal({ product, onClose, onSaved }) {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-8">
+
+          {/* Image */}
           <div>
             <h3 className="text-xs tracking-widest text-amber-500 uppercase mb-4 border-b border-neutral-800 pb-2">Photo</h3>
             <label className="flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-neutral-700 rounded-lg cursor-pointer hover:border-amber-500 transition-colors bg-neutral-800">
@@ -112,6 +130,7 @@ export default function EditModal({ product, onClose, onSaved }) {
             </label>
           </div>
 
+          {/* Basic Info */}
           <div>
             <h3 className="text-xs tracking-widest text-amber-500 uppercase mb-4 border-b border-neutral-800 pb-2">Basic Info</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -122,6 +141,7 @@ export default function EditModal({ product, onClose, onSaved }) {
             </div>
           </div>
 
+          {/* Spec */}
           <div>
             <h3 className="text-xs tracking-widest text-amber-500 uppercase mb-4 border-b border-neutral-800 pb-2">Specifications</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -135,13 +155,56 @@ export default function EditModal({ product, onClose, onSaved }) {
             </div>
           </div>
 
-          <div className="flex gap-3">
-            <button type="button" onClick={onClose} className="flex-1 py-3 border border-neutral-700 hover:border-stone-500 text-stone-400 hover:text-stone-200 text-sm tracking-widest uppercase rounded-lg transition-colors">
-              Cancel
-            </button>
-            <button type="submit" disabled={loading} className="flex-1 py-3 bg-amber-500 hover:bg-amber-400 disabled:bg-neutral-700 disabled:text-neutral-500 text-neutral-950 font-bold tracking-widest text-sm uppercase rounded-lg transition-colors">
-              {loading ? "Saving..." : "Save Changes"}
-            </button>
+          {/* Actions */}
+          <div className="space-y-3">
+
+            {/* Save & Cancel */}
+            <div className="flex gap-3">
+              <button
+                type="button"
+                onClick={onClose}
+                className="flex-1 py-3 border border-neutral-700 hover:border-stone-500 text-stone-400 hover:text-stone-200 text-sm tracking-widest uppercase rounded-lg transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                disabled={loading}
+                className="flex-1 py-3 bg-amber-500 hover:bg-amber-400 disabled:bg-neutral-700 disabled:text-neutral-500 text-neutral-950 font-bold tracking-widest text-sm uppercase rounded-lg transition-colors"
+              >
+                {loading ? "Saving..." : "Save Changes"}
+              </button>
+            </div>
+
+            {/* Delete */}
+            {confirmDelete ? (
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={() => setConfirmDelete(false)}
+                  className="flex-1 py-3 border border-neutral-700 hover:border-stone-500 text-stone-400 text-sm tracking-widest uppercase rounded-lg transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={handleDelete}
+                  disabled={deleting}
+                  className="flex-1 py-3 bg-red-700 hover:bg-red-600 disabled:bg-neutral-700 text-white font-bold text-sm tracking-widest uppercase rounded-lg transition-colors"
+                >
+                  {deleting ? "Deleting..." : "Confirm Delete"}
+                </button>
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={() => setConfirmDelete(true)}
+                className="w-full py-3 border border-neutral-800 hover:border-red-700 text-neutral-600 hover:text-red-500 text-sm tracking-widest uppercase rounded-lg transition-colors"
+              >
+                Delete Product
+              </button>
+            )}
+
           </div>
         </form>
       </div>
