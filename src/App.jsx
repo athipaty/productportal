@@ -4,14 +4,14 @@ import ProductList from "./components/catalog/ProductList";
 import UploadExcel from "./components/catalog/UploadExcel";
 
 const CATEGORY_TYPES = {
-  Fastener: ["All", "Bolt", "Nut", "Screw", "Stud"],
-  Washer:   ["All", "Washer"],
-  Pin:      ["All", "Pin"],
-  Ring:     ["All", "Ring"],
-  Rivet:    ["All", "Rivet"],
-  Insert:   ["All", "Insert"],
-  Collar:   ["All", "Collar"],
-  Other:    ["All"],
+  Fastener: ["Bolt", "Nut", "Screw", "Stud"],
+  Washer:   ["Washer"],
+  Pin:      ["Pin"],
+  Ring:     ["Ring"],
+  Rivet:    ["Rivet"],
+  Insert:   ["Insert"],
+  Collar:   ["Collar"],
+  Other:    [],
 };
 
 const CATEGORIES = ["All", ...Object.keys(CATEGORY_TYPES)];
@@ -20,7 +20,23 @@ const NAV = [
   { key: "list",   label: "Catalog",      icon: "◈" },
   { key: "add",    label: "Add Product",  icon: "+" },
   { key: "upload", label: "Upload Excel", icon: "↑" },
+  { key: "sales",  label: "Sales Report", icon: "↗" },
 ];
+
+function ComingSoon() {
+  return (
+    <div className="flex items-center justify-center h-full min-h-screen">
+      <p className="text-stone-400 text-lg tracking-widest">
+        Coming soon
+        <span className="inline-flex gap-1 ml-1">
+          <span className="animate-bounce inline-block" style={{ animationDelay: "0ms" }}>.</span>
+          <span className="animate-bounce inline-block" style={{ animationDelay: "150ms" }}>.</span>
+          <span className="animate-bounce inline-block" style={{ animationDelay: "300ms" }}>.</span>
+        </span>
+      </p>
+    </div>
+  );
+}
 
 export default function App() {
   const [tab, setTab] = useState("list");
@@ -29,19 +45,17 @@ export default function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const handleCategoryClick = (cat) => {
-  setCategory(cat);
-  setType("All");
-  // Don't close sidebar — let user pick a type first
-  // Only close if clicking "All" or a category with no types
-  if (cat === "All") setSidebarOpen(false);
-};
+    setCategory(cat);
+    setType("All");
+    if (cat === "All") setSidebarOpen(false);
+  };
 
-const handleTypeClick = (t) => {
-  setType(t);
-  setSidebarOpen(false); // close only after type is selected
-};
+  const handleTypeClick = (t) => {
+    setType(t);
+    setSidebarOpen(false);
+  };
 
-  const types = category !== "All" ? CATEGORY_TYPES[category] || ["All"] : null;
+  const types = category !== "All" ? CATEGORY_TYPES[category] || [] : [];
 
   return (
     <div className="flex min-h-screen bg-neutral-950">
@@ -87,11 +101,9 @@ const handleTypeClick = (t) => {
           ))}
         </nav>
 
-        {/* Category + Type Filter */}
+        {/* Category Filter — only on catalog tab */}
         {tab === "list" && (
           <nav className="px-3 py-4 flex-1 overflow-y-auto">
-
-            {/* Categories */}
             <p className="text-neutral-600 text-xs tracking-widest px-2 mb-2">CATEGORY</p>
             {CATEGORIES.map((cat) => (
               <div key={cat}>
@@ -106,7 +118,7 @@ const handleTypeClick = (t) => {
                     }`}
                 >
                   <span>{cat}</span>
-                  {cat !== "All" && (
+                  {CATEGORY_TYPES[cat]?.length > 0 && (
                     <span className={`text-xs transition-transform duration-200 ${category === cat ? "rotate-90" : ""}`}>
                       ›
                     </span>
@@ -114,9 +126,9 @@ const handleTypeClick = (t) => {
                 </button>
 
                 {/* Expanded types */}
-                {category === cat && cat !== "All" && types && (
+                {category === cat && cat !== "All" && types.length > 0 && (
                   <div className="ml-3 pl-3 border-l border-neutral-800 mb-1">
-                    {types.filter(t => t !== "All").map((t) => (
+                    {types.map((t) => (
                       <button
                         key={t}
                         onClick={() => handleTypeClick(t)}
@@ -151,11 +163,11 @@ const handleTypeClick = (t) => {
           <span className="text-amber-500 text-sm tracking-widest font-bold">PRODUCT PORTAL</span>
         </div>
 
-        {/* Page content */}
         <div className="flex-1">
           {tab === "list"   && <ProductList category={category} type={type} />}
           {tab === "add"    && <AddProductForm />}
           {tab === "upload" && <UploadExcel onUploaded={() => setTab("list")} />}
+          {tab === "sales"  && <ComingSoon />}
         </div>
       </div>
 
