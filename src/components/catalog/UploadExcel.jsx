@@ -209,6 +209,60 @@ export default function UploadExcel({ onUploaded }) {
             <li>• Leave cells empty if data is not available</li>
           </ul>
         </div>
+
+{/* Required Format */}
+        <div className="mt-4 mb-8 p-4 bg-neutral-900 border border-neutral-800 rounded-xl">
+          <p className="text-xs text-amber-500 tracking-widest font-bold mb-3">REQUIRED FORMAT</p>
+          <p className="text-xs text-neutral-500 mb-3">First row must use these exact column names:</p>
+          <div className="overflow-x-auto">
+            <table className="w-full text-xs">
+              <thead>
+                <tr className="border-b border-neutral-700">
+                  <th className="text-left py-2 pr-4 text-amber-400 font-medium">Column</th>
+                  <th className="text-left py-2 pr-4 text-neutral-400 font-medium">Type</th>
+                  <th className="text-left py-2 text-neutral-400 font-medium">Example</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[
+                  ["partNo",           "text *",  "TG949046-2600"],
+                  ["name",             "text",    "Hex Bolt"],
+                  ["customer",         "text",    "AAA"],
+                  ["supplier",         "text",    "FRJ"],
+                  ["category",         "text",    "Fastener"],
+                  ["type",             "text",    "Bolt"],
+                  ["volumePerMonth",   "number",  "800"],
+                  ["material",         "text",    "SWCH12A"],
+                  ["heatTreatment",    "text",    "QT (HRC44-53)"],
+                  ["surfaceTreatment", "text",    "Zinc Plating"],
+                  ["headType",         "text",    "Hex"],
+                  ["driveType",        "text",    "Phillips"],
+                  ["threadSize",       "text",    "M6 x 1.0"],
+                  ["length",           "number",  "40"],
+                  ["outerDiameter",    "text",    "Ø12"],
+                  ["innerDiameter",    "text",    "Ø6"],
+                  ["thickness",        "number",  "1.5"],
+                  ["standard",         "text",    "ISO"],
+                  ["grade",            "text",    "8.8"],
+                  ["note",             "text",    "any extra info"],
+                ].map(([col, type, example]) => (
+                  <tr key={col} className="border-b border-neutral-800/50">
+                    <td className="py-1.5 pr-4">
+                      <span className={`font-mono ${col === "partNo" ? "text-amber-400" : "text-stone-400"}`}>
+                        {col}
+                      </span>
+                      {col === "partNo" && <span className="text-red-400 ml-1">*</span>}
+                    </td>
+                    <td className="py-1.5 pr-4 text-neutral-600">{type}</td>
+                    <td className="py-1.5 text-neutral-600">{example}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+
       </div>
     </div>
   );
