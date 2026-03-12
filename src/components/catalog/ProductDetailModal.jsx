@@ -63,23 +63,6 @@ export default function ProductDetailModal({ product, onClose, onEdit }) {
             />
           )}
 
-          {/* Identity */}
-          <div>
-            <p className="text-xs tracking-widest text-amber-500 uppercase mb-2">
-              Identity
-            </p>
-            <Row label="Customer" value={product.customer} />
-            <Row label="Supplier" value={product.supplier} />
-            <Row
-              label="Vol / Month"
-              value={
-                product.volumePerMonth
-                  ? `${product.volumePerMonth.toLocaleString()} pcs`
-                  : null
-              }
-            />
-          </div>
-
           {/* Specifications */}
           <div>
             <p className="text-xs tracking-widest text-amber-500 uppercase mb-2">
@@ -101,6 +84,23 @@ export default function ProductDetailModal({ product, onClose, onEdit }) {
             <Row label="Standard" value={s.standard} />
             <Row label="Grade" value={s.grade} />
             <Row label="Note" value={s.note} />
+          </div>
+
+          {/* Identity */}
+          <div>
+            <p className="text-xs tracking-widest text-amber-500 uppercase mb-2">
+              Identity
+            </p>
+            <Row label="Customer" value={product.customer} />
+            <Row label="Supplier" value={product.supplier} />
+            <Row
+              label="Vol / Month"
+              value={
+                product.volumePerMonth
+                  ? `${product.volumePerMonth.toLocaleString()} pcs`
+                  : null
+              }
+            />
           </div>
         </div>
 
