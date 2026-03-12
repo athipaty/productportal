@@ -29,15 +29,17 @@ export default function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const handleCategoryClick = (cat) => {
-    setCategory(cat);
-    setType("All");
-    setSidebarOpen(false);
-  };
+  setCategory(cat);
+  setType("All");
+  // Don't close sidebar — let user pick a type first
+  // Only close if clicking "All" or a category with no types
+  if (cat === "All") setSidebarOpen(false);
+};
 
-  const handleTypeClick = (t) => {
-    setType(t);
-    setSidebarOpen(false);
-  };
+const handleTypeClick = (t) => {
+  setType(t);
+  setSidebarOpen(false); // close only after type is selected
+};
 
   const types = category !== "All" ? CATEGORY_TYPES[category] || ["All"] : null;
 
