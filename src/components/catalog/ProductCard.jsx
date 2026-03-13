@@ -44,7 +44,7 @@ export default function ProductCard({ product, onView }) {
             </p>
             {location && (
               <p className="text-stone-500 truncate">
-                <span className="text-neutral-600 mr-1">📍</span>{location}
+                <span className="text-neutral-600 mr-1">{location}</span>
               </p>
             )}
           </div>
