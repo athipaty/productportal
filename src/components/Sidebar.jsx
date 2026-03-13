@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { BASE_URL } from "../constants/api";
 import NavItem from "./sidebar/NavItem";
 import CategoryItem from "./sidebar/CategoryItem";
+import Logo from "../assets/logo.svg";
 
 const NAV = [
   { key: "list",   label: "Catalog",      icon: "◈" },
@@ -31,10 +32,9 @@ export default function Sidebar({ tab, setTab, category, type, onCategoryClick, 
     `}>
 
       {/* Logo */}
-      <div className="px-5 py-6 border-b border-neutral-800">
-        <p className="text-amber-500 text-xs tracking-widest mb-1 animate-pulse">PRODUCT</p>
-        <h1 className="text-stone-100 text-xl font-bold tracking-wide">Portal</h1>
-      </div>
+      <div className="px-4 py-4 border-b border-neutral-800">
+  <img src={Logo} alt="Product Portal" className="w-full" />
+</div>
 
       {/* Main Nav */}
       <nav className="px-3 py-4 border-b border-neutral-800">

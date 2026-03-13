@@ -5,6 +5,7 @@ import ProductList from "./components/catalog/ProductList";
 import AddProductForm from "./components/AddProductForm";
 import UploadExcel from "./components/catalog/UploadExcel";
 import { BASE_URL } from "./constants/api";
+import Logo from "./assets/logo.svg";
 
 function PasswordGate({ onUnlock }) {
   const [input, setInput] = useState("");
@@ -60,12 +61,9 @@ function PasswordGate({ onUnlock }) {
   return (
     <div className="min-h-screen bg-neutral-950 flex items-center justify-center p-4">
       <div className="w-full max-w-sm">
-        <div className="mb-8 text-center">
-          <p className="text-amber-500 text-xs tracking-widest mb-2">PRODUCT</p>
-          <h1 className="text-3xl font-bold text-stone-100">Portal</h1>
-          <p className="text-neutral-600 text-sm mt-2">
-            Enter password to continue
-          </p>
+        <div className="mb-8 flex flex-col items-center">
+          <img src={Logo} alt="Product Portal" className="w-48 mb-4" />
+          <p className="text-neutral-600 text-sm">Enter password to continue</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -79,8 +77,8 @@ function PasswordGate({ onUnlock }) {
             placeholder="Password"
             autoFocus
             className={`w-full px-4 py-3 bg-neutral-900 border rounded-xl text-stone-100 text-sm text-center
-              focus:outline-none transition-colors placeholder:text-neutral-600
-              ${error ? "border-red-500" : "border-neutral-700 focus:border-amber-500"}`}
+            focus:outline-none transition-colors placeholder:text-neutral-600
+            ${error ? "border-red-500" : "border-neutral-700 focus:border-amber-500"}`}
           />
           {error && <p className="text-red-400 text-xs text-center">{error}</p>}
           <button

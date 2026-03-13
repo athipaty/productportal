@@ -1,0 +1,20 @@
+<svg width="100%" viewBox="0 0 200 56" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .wm-big { font-family: sans-serif; font-size: 15px; font-weight: 500; fill: #e7e5e4; }
+    </style>
+  </defs>
+
+  <polygon points="22,2 36,10 36,26 22,34 8,26 8,10" fill="#F59E0B" opacity="0.12"/>
+  <polygon points="22,2 36,10 36,26 22,34 8,10 8,26" fill="none" stroke="#F59E0B" stroke-width="1.8"/>
+  <circle cx="22" cy="18" r="7" fill="none" stroke="#F59E0B" stroke-width="1.5"/>
+  <circle cx="22" cy="18" r="10" fill="none" stroke="#F59E0B" stroke-width="0.75" opacity="0.4" stroke-dasharray="3 2"/>
+  <circle cx="22" cy="18" r="2" fill="#F59E0B" opacity="0.8"/>
+  <ellipse cx="22" cy="42" rx="14" ry="4" fill="none" stroke="#F59E0B" stroke-width="1" opacity="0.35"/>
+  <ellipse cx="22" cy="42" rx="6"  ry="2" fill="none" stroke="#F59E0B" stroke-width="1" opacity="0.35"/>
+
+  <line x1="46" y1="4" x2="46" y2="52" stroke="#404040" stroke-width="0.75"/>
+
+  <text x="55" y="22" class="wm-big">product</text>
+  <text x="55" y="40" class="wm-big" style="fill:#F59E0B">portal</text>
+</svg>
