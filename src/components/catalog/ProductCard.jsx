@@ -20,11 +20,11 @@ export default function ProductCard({ product, onView }) {
       </div>
 
       {/* Data */}
-      <div className="flex-1 min-w-0">
+      <div className="flex-1 min-w-0 overflow-hidden">
 
         {/* Top row */}
         <div className="flex justify-between items-start mb-1">
-          <div>
+          <div className="min-w-0 flex-1">
             <p className="text-amber-500 text-xs tracking-widest truncate">{product.partNo}</p>
             <p className="text-stone-500 text-xs mt-0.5">
               {product.volumePerMonth ? `${product.volumePerMonth.toLocaleString()} / month` : "—"}
@@ -37,18 +37,20 @@ export default function ProductCard({ product, onView }) {
         </div>
 
         {/* Bottom row */}
-        <div className="border-t border-neutral-800 pt-2 mt-2 flex justify-between items-end text-xs">
-          <div className="space-y-1 min-w-0">
-            <p className="text-neutral-600">{s.length ? `${s.length} mm` : "—"}</p>
+        <div className="border-t border-neutral-800 pt-2 mt-2 flex justify-between items-start text-xs gap-2">
+          <div className="space-y-1 min-w-0 flex-1">
+            <p className="text-neutral-600 whitespace-nowrap">
+              {s.length ? `${s.length} mm` : "—"}
+            </p>
             {location && (
-              <p className="text-stone-500 truncate max-w-[120px]">
-                <span className="text-neutral-600 mr-1">{location}</span>
+              <p className="text-stone-500 truncate">
+                <span className="text-neutral-600 mr-1">📍</span>{location}
               </p>
             )}
           </div>
-          <div className="text-right flex-shrink-0 ml-2 space-y-1">
-            <p className="text-stone-400">{s.heatTreatment || "—"}</p>
-            <p className="text-stone-500">{s.surfaceTreatment || "—"}</p>
+          <div className="text-right flex-shrink-0 space-y-1 max-w-[45%]">
+            <p className="text-stone-400 truncate">{s.heatTreatment || "—"}</p>
+            <p className="text-stone-500 truncate">{s.surfaceTreatment || "—"}</p>
           </div>
         </div>
 
