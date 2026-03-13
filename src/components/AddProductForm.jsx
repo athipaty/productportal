@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { API_URL, CLOUD_NAME, UPLOAD_PRESET } from "../constants/api";
 import Field from "./catalog/Field";
+import Logo from "../assets/logo.svg";
 
 const initialForm = {
   partNo: "",
@@ -126,9 +127,6 @@ export default function AddProductForm() {
     <div className="min-h-screen bg-neutral-950 text-stone-200 p-8">
       <div className="max-w-2xl mx-auto">
         <div className="mb-8">
-          <p className="text-amber-500 text-xs tracking-widest mb-1">
-            PRODUCT PORTAL
-          </p>
           <h1 className="text-3xl font-bold tracking-wide text-stone-100">
             Add Product
           </h1>

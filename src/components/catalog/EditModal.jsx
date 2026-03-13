@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { API_URL, CLOUD_NAME, UPLOAD_PRESET } from "../../constants/api";
 import Field from "./Field";
+import Logo from "../../assets/logo.svg";
 
 export default function EditModal({ product, onClose, onSaved, onDeleted }) {
   const [form, setForm] = useState({
@@ -139,9 +140,6 @@ export default function EditModal({ product, onClose, onSaved, onDeleted }) {
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <p className="text-amber-500 text-xs tracking-widest mb-1">
-              PRODUCT PORTAL
-            </p>
             <h2 className="text-2xl font-bold text-stone-100">Edit Product</h2>
           </div>
           <button

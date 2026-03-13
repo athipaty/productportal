@@ -62,7 +62,9 @@ function PasswordGate({ onUnlock }) {
     <div className="min-h-screen bg-neutral-950 flex items-center justify-center p-4">
       <div className="w-full max-w-sm">
         <div className="mb-8 flex flex-col items-center">
-          <img src={Logo} alt="Product Portal" className="w-48 mb-4" />
+          <div className="flex justify-center mb-4">
+            <img src={Logo} alt="Product Portal" className="w-72" />
+          </div>
           <p className="text-neutral-600 text-sm">Enter password to continue</p>
         </div>
 
@@ -174,7 +176,9 @@ export default function App() {
           >
             ☰
           </button>
-          <img src={Logo} alt="Product Portal" className="h-7" />
+          <span className="text-amber-500 text-sm tracking-widest font-bold">
+            PRODUCT PORTAL
+          </span>
         </div>
 
         <div className="flex-1">

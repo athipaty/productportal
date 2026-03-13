@@ -5,13 +5,22 @@ import CategoryItem from "./sidebar/CategoryItem";
 import Logo from "../assets/logo.svg";
 
 const NAV = [
-  { key: "list",   label: "Catalog",      icon: "◈" },
-  { key: "add",    label: "Add Product",  icon: "+" },
+  { key: "list", label: "Catalog", icon: "◈" },
+  { key: "add", label: "Add Product", icon: "+" },
   { key: "upload", label: "Upload Excel", icon: "↑" },
-  { key: "sales",  label: "Sales Report", icon: "↗" },
+  { key: "sales", label: "Sales Report", icon: "↗" },
 ];
 
-export default function Sidebar({ tab, setTab, category, type, onCategoryClick, onTypeClick, sidebarOpen, setSidebarOpen }) {
+export default function Sidebar({
+  tab,
+  setTab,
+  category,
+  type,
+  onCategoryClick,
+  onTypeClick,
+  sidebarOpen,
+  setSidebarOpen,
+}) {
   const [categoryData, setCategoryData] = useState([]);
   const [categoryOpen, setCategoryOpen] = useState(true);
   const [openCategory, setOpenCategory] = useState(null);
@@ -19,26 +28,29 @@ export default function Sidebar({ tab, setTab, category, type, onCategoryClick, 
   useEffect(() => {
     fetch(`${BASE_URL}/catalog/categories`)
       .then((res) => res.json())
-      .then((data) => Array.isArray(data) ? setCategoryData(data) : null)
+      .then((data) => (Array.isArray(data) ? setCategoryData(data) : null))
       .catch(console.error);
   }, []);
 
   return (
-    <aside className={`
+    <aside
+      className={`
       fixed lg:static inset-y-0 left-0 z-30
       w-56 bg-neutral-900 border-r border-neutral-800
       flex flex-col transition-transform duration-300
       ${sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
-    `}>
-
+    `}
+    >
       {/* Logo */}
       <div className="px-4 py-4 border-b border-neutral-800">
-  <img src={Logo} alt="Product Portal" className="w-full" />
-</div>
+        <img src={Logo} alt="Product Portal" className="w-full" />
+      </div>
 
       {/* Main Nav */}
       <nav className="px-3 py-4 border-b border-neutral-800">
-        <p className="text-neutral-600 text-xs tracking-widest px-2 mb-2">MENU</p>
+        <p className="text-neutral-600 text-xs tracking-widest px-2 mb-2">
+          MENU
+        </p>
         {NAV.map(({ key, label, icon }, i) => (
           <NavItem
             key={key}
@@ -46,7 +58,10 @@ export default function Sidebar({ tab, setTab, category, type, onCategoryClick, 
             label={label}
             active={tab === key}
             delay={i * 60}
-            onClick={() => { setTab(key); setSidebarOpen(false); }}
+            onClick={() => {
+              setTab(key);
+              setSidebarOpen(false);
+            }}
           />
         ))}
       </nav>
@@ -54,40 +69,45 @@ export default function Sidebar({ tab, setTab, category, type, onCategoryClick, 
       {/* Category Filter */}
       {tab === "list" && (
         <nav className="px-3 py-4 flex-1 overflow-y-auto">
-
           {/* Category header toggle */}
           <button
-            onClick={() => setCategoryOpen(o => !o)}
+            onClick={() => setCategoryOpen((o) => !o)}
             className="w-full flex items-center justify-between px-2 mb-2 group"
           >
             <p className="text-neutral-600 text-xs tracking-widest group-hover:text-neutral-400 transition-colors">
               CATEGORY
             </p>
-            <span style={{
-              display: "inline-block",
-              fontSize: "12px",
-              color: "#525252",
-              transition: "transform 0.3s ease",
-              transform: categoryOpen ? "rotate(90deg)" : "rotate(0deg)",
-            }}>
+            <span
+              style={{
+                display: "inline-block",
+                fontSize: "12px",
+                color: "#525252",
+                transition: "transform 0.3s ease",
+                transform: categoryOpen ? "rotate(90deg)" : "rotate(0deg)",
+              }}
+            >
               ›
             </span>
           </button>
 
           {/* Collapsible list */}
-          <div style={{
-            maxHeight: categoryOpen ? "2000px" : "0px",
-            overflow: "hidden",
-            transition: "max-height 0.4s ease",
-          }}>
-
+          <div
+            style={{
+              maxHeight: categoryOpen ? "2000px" : "0px",
+              overflow: "hidden",
+              transition: "max-height 0.4s ease",
+            }}
+          >
             {/* All */}
             <CategoryItem
               cat="All"
               active={category === "All"}
               activeType={type}
               types={[]}
-              onCategoryClick={() => { onCategoryClick("All"); setOpenCategory(null); }}
+              onCategoryClick={() => {
+                onCategoryClick("All");
+                setOpenCategory(null);
+              }}
               onTypeClick={onTypeClick}
               delay={0}
               isOpen={false}
@@ -106,12 +126,16 @@ export default function Sidebar({ tab, setTab, category, type, onCategoryClick, 
                 onTypeClick={onTypeClick}
                 delay={i * 50}
                 isOpen={openCategory === c.category}
-                onToggle={() => setOpenCategory(o => o === c.category ? null : c.category)}
+                onToggle={() =>
+                  setOpenCategory((o) => (o === c.category ? null : c.category))
+                }
               />
             ))}
 
             {categoryData.length === 0 && (
-              <p className="text-neutral-700 text-xs px-3 py-2 animate-pulse">Loading...</p>
+              <p className="text-neutral-700 text-xs px-3 py-2 animate-pulse">
+                Loading...
+              </p>
             )}
           </div>
         </nav>
