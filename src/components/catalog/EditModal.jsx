@@ -11,7 +11,11 @@ export default function EditModal({ product, onClose, onSaved, onDeleted }) {
     customer: product.customer || "",
     supplier: product.supplier || "",
     volumePerMonth: product.volumePerMonth || "",
-    photo: product.photo || { main: "", thumbnail: "" }, // ← add this
+    qtyPerBox: product.qtyPerBox || "",
+    location: Array.isArray(product.location)
+      ? product.location.join(", ")
+      : product.location || "",
+    photo: product.photo || { main: "", thumbnail: "" },
     spec: {
       material: product.spec?.material || "",
       heatTreatment: product.spec?.heatTreatment || "",
@@ -89,6 +93,13 @@ export default function EditModal({ product, onClose, onSaved, onDeleted }) {
           volumePerMonth: form.volumePerMonth
             ? Number(form.volumePerMonth)
             : undefined,
+          qtyPerBox: form.qtyPerBox ? Number(form.qtyPerBox) : undefined,
+          location: form.location
+            ? form.location
+                .split(",")
+                .map((l) => l.trim())
+                .filter(Boolean)
+            : [],
           spec: {
             ...form.spec,
             length: form.spec.length ? Number(form.spec.length) : undefined,
@@ -189,8 +200,6 @@ export default function EditModal({ product, onClose, onSaved, onDeleted }) {
                 </label>
               )}
             </div>
-
-            {/* Change photo button when image exists */}
             {(imagePreview || form.photo?.main) && (
               <label className="mt-2 inline-block cursor-pointer text-xs text-neutral-500 hover:text-amber-500 transition-colors">
                 Change photo
@@ -260,6 +269,21 @@ export default function EditModal({ product, onClose, onSaved, onDeleted }) {
                 onChange={handleChange}
                 type="number"
                 placeholder="e.g. 800"
+              />
+              <Field
+                label="Qty Per Box"
+                name="qtyPerBox"
+                value={form.qtyPerBox}
+                onChange={handleChange}
+                type="number"
+                placeholder="e.g. 100"
+              />
+              <Field
+                label="Location"
+                name="location"
+                value={form.location}
+                onChange={handleChange}
+                placeholder="e.g. A1-02"
               />
             </div>
           </div>

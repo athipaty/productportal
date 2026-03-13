@@ -1,28 +1,31 @@
 import { useState } from "react";
 import { API_URL, CLOUD_NAME, UPLOAD_PRESET } from "../constants/api";
+import Field from "./catalog/Field";
 
 const initialForm = {
-  partNo:         "",
-  name:           "",
-  category:       "",
-  type:           "",
-  customer:       "",
-  supplier:       "",
+  partNo: "",
+  name: "",
+  category: "",
+  type: "",
+  customer: "",
+  supplier: "",
   volumePerMonth: "",
+  qtyPerBox: "",
+  location: "",
   spec: {
-    material:         "",
-    heatTreatment:    "",
+    material: "",
+    heatTreatment: "",
     surfaceTreatment: "",
-    headType:         "",
-    driveType:        "",
-    threadSize:       "",
-    length:           "",
-    outerDiameter:    "",
-    innerDiameter:    "",
-    thickness:        "",
-    standard:         "",
-    grade:            "",
-    note:             "",
+    headType: "",
+    driveType: "",
+    threadSize: "",
+    length: "",
+    outerDiameter: "",
+    innerDiameter: "",
+    thickness: "",
+    standard: "",
+    grade: "",
+    note: "",
   },
 };
 
@@ -57,13 +60,16 @@ export default function AddProductForm() {
     data.append("upload_preset", UPLOAD_PRESET);
     const res = await fetch(
       `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
-      { method: "POST", body: data }
+      { method: "POST", body: data },
     );
     const result = await res.json();
     if (result.error) throw new Error(result.error.message);
     return {
       main: result.secure_url,
-      thumbnail: result.secure_url.replace("/upload/", "/upload/w_200,h_200,c_fill/"),
+      thumbnail: result.secure_url.replace(
+        "/upload/",
+        "/upload/w_200,h_200,c_fill/",
+      ),
     };
   };
 
@@ -82,12 +88,23 @@ export default function AddProductForm() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...form,
-          volumePerMonth: form.volumePerMonth ? Number(form.volumePerMonth) : undefined,
+          volumePerMonth: form.volumePerMonth
+            ? Number(form.volumePerMonth)
+            : undefined,
+          qtyPerBox: form.qtyPerBox ? Number(form.qtyPerBox) : undefined,
           photo,
+          location: form.location
+            ? form.location
+                .split(",")
+                .map((l) => l.trim())
+                .filter(Boolean)
+            : [],
           spec: {
             ...form.spec,
-            length:    form.spec.length    ? Number(form.spec.length)    : undefined,
-            thickness: form.spec.thickness ? Number(form.spec.thickness) : undefined,
+            length: form.spec.length ? Number(form.spec.length) : undefined,
+            thickness: form.spec.thickness
+              ? Number(form.spec.thickness)
+              : undefined,
           },
         }),
       });
@@ -109,8 +126,12 @@ export default function AddProductForm() {
     <div className="min-h-screen bg-neutral-950 text-stone-200 p-8">
       <div className="max-w-2xl mx-auto">
         <div className="mb-8">
-          <p className="text-amber-500 text-xs tracking-widest mb-1">PRODUCT PORTAL</p>
-          <h1 className="text-3xl font-bold tracking-wide text-stone-100">Add Product</h1>
+          <p className="text-amber-500 text-xs tracking-widest mb-1">
+            PRODUCT PORTAL
+          </p>
+          <h1 className="text-3xl font-bold tracking-wide text-stone-100">
+            Add Product
+          </h1>
         </div>
 
         {success && (
@@ -125,54 +146,210 @@ export default function AddProductForm() {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-8">
-
           {/* Image */}
           <div>
-            <h2 className="text-xs tracking-widest text-amber-500 uppercase mb-4 border-b border-neutral-800 pb-2">Photo</h2>
+            <h2 className="text-xs tracking-widest text-amber-500 uppercase mb-4 border-b border-neutral-800 pb-2">
+              Photo
+            </h2>
             <label className="flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-neutral-700 rounded-lg cursor-pointer hover:border-amber-500 transition-colors bg-neutral-900">
               {imagePreview ? (
-                <img src={imagePreview} className="h-full w-full object-contain rounded-lg p-2" />
+                <img
+                  src={imagePreview}
+                  className="h-full w-full object-contain rounded-lg p-2"
+                />
               ) : (
                 <div className="text-center">
-                  <p className="text-neutral-500 text-sm">Click to upload image</p>
-                  <p className="text-neutral-600 text-xs mt-1">PNG, JPG, WEBP</p>
+                  <p className="text-neutral-500 text-sm">
+                    Click to upload image
+                  </p>
+                  <p className="text-neutral-600 text-xs mt-1">
+                    PNG, JPG, WEBP
+                  </p>
                 </div>
               )}
-              <input type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                className="hidden"
+              />
             </label>
           </div>
 
           {/* Basic Info */}
           <div>
-            <h2 className="text-xs tracking-widest text-amber-500 uppercase mb-4 border-b border-neutral-800 pb-2">Basic Info</h2>
+            <h2 className="text-xs tracking-widest text-amber-500 uppercase mb-4 border-b border-neutral-800 pb-2">
+              Basic Info
+            </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <Field label="Part No *"      name="partNo"         value={form.partNo}         onChange={handleChange} required placeholder="e.g. TG949046-2600" />
-              <Field label="Name"           name="name"           value={form.name}           onChange={handleChange} placeholder="e.g. Hex Bolt" />
-              <Field label="Customer"       name="customer"       value={form.customer}       onChange={handleChange} placeholder="e.g. AAA" />
-              <Field label="Supplier"       name="supplier"       value={form.supplier}       onChange={handleChange} placeholder="e.g. FRJ" />
-              <Field label="Category"       name="category"       value={form.category}       onChange={handleChange} placeholder="e.g. Fastener" />
-              <Field label="Type"           name="type"           value={form.type}           onChange={handleChange} placeholder="e.g. Bolt" />
-              <Field label="Volume / Month" name="volumePerMonth" value={form.volumePerMonth} onChange={handleChange} type="number" placeholder="e.g. 800" />
+              <Field
+                label="Part No *"
+                name="partNo"
+                value={form.partNo}
+                onChange={handleChange}
+                required
+                placeholder="e.g. TG949046-2600"
+              />
+              <Field
+                label="Name"
+                name="name"
+                value={form.name}
+                onChange={handleChange}
+                placeholder="e.g. Hex Bolt"
+              />
+              <Field
+                label="Customer"
+                name="customer"
+                value={form.customer}
+                onChange={handleChange}
+                placeholder="e.g. AAA"
+              />
+              <Field
+                label="Supplier"
+                name="supplier"
+                value={form.supplier}
+                onChange={handleChange}
+                placeholder="e.g. FRJ"
+              />
+              <Field
+                label="Category"
+                name="category"
+                value={form.category}
+                onChange={handleChange}
+                placeholder="e.g. Fastener"
+              />
+              <Field
+                label="Type"
+                name="type"
+                value={form.type}
+                onChange={handleChange}
+                placeholder="e.g. Bolt"
+              />
+              <Field
+                label="Volume / Month"
+                name="volumePerMonth"
+                value={form.volumePerMonth}
+                onChange={handleChange}
+                type="number"
+                placeholder="e.g. 800"
+              />
+              <Field
+                label="Qty Per Box"
+                name="qtyPerBox"
+                value={form.qtyPerBox}
+                onChange={handleChange}
+                type="number"
+                placeholder="e.g. 100"
+              />
+              <Field
+                label="Location"
+                name="location"
+                value={form.location}
+                onChange={handleChange}
+                placeholder="e.g. A1-02"
+              />
             </div>
           </div>
 
           {/* Specifications */}
           <div>
-            <h2 className="text-xs tracking-widest text-amber-500 uppercase mb-4 border-b border-neutral-800 pb-2">Specifications</h2>
+            <h2 className="text-xs tracking-widest text-amber-500 uppercase mb-4 border-b border-neutral-800 pb-2">
+              Specifications
+            </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <Field label="Material"          name="spec.material"         value={form.spec.material}         onChange={handleChange} placeholder="e.g. SWCH12A" />
-              <Field label="Heat Treatment"    name="spec.heatTreatment"    value={form.spec.heatTreatment}    onChange={handleChange} placeholder="e.g. QT (HRC44-53)" />
-              <Field label="Surface Treatment" name="spec.surfaceTreatment" value={form.spec.surfaceTreatment} onChange={handleChange} placeholder="e.g. Zinc Plating" />
-              <Field label="Head Type"         name="spec.headType"         value={form.spec.headType}         onChange={handleChange} placeholder="e.g. Hex, Button, Flat" />
-              <Field label="Drive Type"        name="spec.driveType"        value={form.spec.driveType}        onChange={handleChange} placeholder="e.g. Phillips, Allen" />
-              <Field label="Thread Size"       name="spec.threadSize"       value={form.spec.threadSize}       onChange={handleChange} placeholder="e.g. M6 x 1.0" />
-              <Field label="Length (mm)"       name="spec.length"           value={form.spec.length}           onChange={handleChange} type="number" placeholder="e.g. 40" />
-              <Field label="Outer Diameter"    name="spec.outerDiameter"    value={form.spec.outerDiameter}    onChange={handleChange} placeholder="e.g. Ø12" />
-              <Field label="Inner Diameter"    name="spec.innerDiameter"    value={form.spec.innerDiameter}    onChange={handleChange} placeholder="e.g. Ø6" />
-              <Field label="Thickness (mm)"    name="spec.thickness"        value={form.spec.thickness}        onChange={handleChange} type="number" placeholder="e.g. 1.5" />
-              <Field label="Standard"          name="spec.standard"         value={form.spec.standard}         onChange={handleChange} placeholder="e.g. ISO, DIN, JIS" />
-              <Field label="Grade"             name="spec.grade"            value={form.spec.grade}            onChange={handleChange} placeholder="e.g. 8.8" />
-              <Field label="Note"              name="spec.note"             value={form.spec.note}             onChange={handleChange} placeholder="Any extra info" />
+              <Field
+                label="Material"
+                name="spec.material"
+                value={form.spec.material}
+                onChange={handleChange}
+                placeholder="e.g. SWCH12A"
+              />
+              <Field
+                label="Heat Treatment"
+                name="spec.heatTreatment"
+                value={form.spec.heatTreatment}
+                onChange={handleChange}
+                placeholder="e.g. QT (HRC44-53)"
+              />
+              <Field
+                label="Surface Treatment"
+                name="spec.surfaceTreatment"
+                value={form.spec.surfaceTreatment}
+                onChange={handleChange}
+                placeholder="e.g. Zinc Plating"
+              />
+              <Field
+                label="Head Type"
+                name="spec.headType"
+                value={form.spec.headType}
+                onChange={handleChange}
+                placeholder="e.g. Hex, Button, Flat"
+              />
+              <Field
+                label="Drive Type"
+                name="spec.driveType"
+                value={form.spec.driveType}
+                onChange={handleChange}
+                placeholder="e.g. Phillips, Allen"
+              />
+              <Field
+                label="Thread Size"
+                name="spec.threadSize"
+                value={form.spec.threadSize}
+                onChange={handleChange}
+                placeholder="e.g. M6 x 1.0"
+              />
+              <Field
+                label="Length (mm)"
+                name="spec.length"
+                value={form.spec.length}
+                onChange={handleChange}
+                type="number"
+                placeholder="e.g. 40"
+              />
+              <Field
+                label="Outer Diameter"
+                name="spec.outerDiameter"
+                value={form.spec.outerDiameter}
+                onChange={handleChange}
+                placeholder="e.g. Ø12"
+              />
+              <Field
+                label="Inner Diameter"
+                name="spec.innerDiameter"
+                value={form.spec.innerDiameter}
+                onChange={handleChange}
+                placeholder="e.g. Ø6"
+              />
+              <Field
+                label="Thickness (mm)"
+                name="spec.thickness"
+                value={form.spec.thickness}
+                onChange={handleChange}
+                type="number"
+                placeholder="e.g. 1.5"
+              />
+              <Field
+                label="Standard"
+                name="spec.standard"
+                value={form.spec.standard}
+                onChange={handleChange}
+                placeholder="e.g. ISO, DIN, JIS"
+              />
+              <Field
+                label="Grade"
+                name="spec.grade"
+                value={form.spec.grade}
+                onChange={handleChange}
+                placeholder="e.g. 8.8"
+              />
+              <Field
+                label="Note"
+                name="spec.note"
+                value={form.spec.note}
+                onChange={handleChange}
+                placeholder="Any extra info"
+              />
             </div>
           </div>
 
@@ -185,23 +362,6 @@ export default function AddProductForm() {
           </button>
         </form>
       </div>
-    </div>
-  );
-}
-
-function Field({ label, name, value, onChange, type = "text", required, placeholder }) {
-  return (
-    <div className="flex flex-col gap-1">
-      <label className="text-xs text-stone-400 tracking-wide">{label}</label>
-      <input
-        type={type}
-        name={name}
-        value={value}
-        onChange={onChange}
-        required={required}
-        placeholder={placeholder}
-        className="bg-neutral-900 border border-neutral-700 focus:border-amber-500 focus:outline-none rounded-lg px-4 py-2 text-stone-100 text-sm transition-colors placeholder:text-neutral-600"
-      />
     </div>
   );
 }
