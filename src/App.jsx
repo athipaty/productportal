@@ -174,9 +174,7 @@ export default function App() {
           >
             ☰
           </button>
-          <span className="text-amber-500 text-sm tracking-widest font-bold">
-            PRODUCT PORTAL
-          </span>
+          <img src={Logo} alt="Product Portal" className="h-7" />
         </div>
 
         <div className="flex-1">
