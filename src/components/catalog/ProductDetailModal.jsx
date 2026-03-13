@@ -1,3 +1,5 @@
+import { useState, useEffect } from "react";
+
 function Row({ label, value }) {
   if (!value) return null;
   return (
