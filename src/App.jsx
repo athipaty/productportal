@@ -78,7 +78,7 @@ function PasswordGate({ onUnlock }) {
             }}
             placeholder="Password"
             autoFocus
-            className={`w-full px-4 py-3 bg-neutral-900 border rounded-xl text-stone-100 text-sm
+            className={`w-full px-4 py-3 bg-neutral-900 border rounded-xl text-stone-100 text-sm text-center
               focus:outline-none transition-colors placeholder:text-neutral-600
               ${error ? "border-red-500" : "border-neutral-700 focus:border-amber-500"}`}
           />
