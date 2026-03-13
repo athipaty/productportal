@@ -14,7 +14,10 @@ export default function ProductList({ category = "All", type = "All" }) {
   const [refreshKey, setRefreshKey] = useState(0);
 
   const refresh = () => setRefreshKey((k) => k + 1);
-  
+  const imageCount = products.filter((p) => p.photo?.thumbnail).length;
+  const imagePercent =
+    products.length > 0 ? Math.round((imageCount / products.length) * 100) : 0;
+
   useEffect(() => {
     const timer = setTimeout(() => {
       const params = new URLSearchParams();
@@ -65,9 +68,23 @@ export default function ProductList({ category = "All", type = "All" }) {
                 ? "All Products"
                 : category}
           </h2>
-          <p className="text-stone-500 text-sm mt-0.5">
-            {products.length} items
-          </p>
+          <div className="flex gap-2">
+            <p className="text-stone-500 text-sm mt-0.5">
+              {products.length} items
+            </p>
+            <div className="flex items-center gap-2 mt-1">
+              <div className="w-24 h-1 bg-neutral-800 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-amber-500 rounded-full transition-all duration-500"
+                  style={{ width: `${imagePercent}%` }}
+                />
+              </div>
+              <p className="text-neutral-600 text-xs">
+                <span className="text-amber-500">{imagePercent}%</span> with
+                photo
+              </p>
+            </div>
+          </div>
         </div>
         <input
           type="text"
