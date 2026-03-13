@@ -8,7 +8,7 @@ function ComingSoon() {
   return (
     <div className="flex items-center justify-center h-full min-h-screen">
       <p className="text-stone-400 text-lg tracking-widest">
-        Coming soon
+        On plan
         <span className="inline-flex gap-1 ml-1">
           <span className="animate-bounce inline-block" style={{ animationDelay: "0ms" }}>.</span>
           <span className="animate-bounce inline-block" style={{ animationDelay: "150ms" }}>.</span>
