@@ -28,11 +28,11 @@ export default function ProductCard({ product, onView }) {
             </p>
             <p className="text-stone-500 text-xs mt-0.5">
               {product.volumePerMonth
-                ? `${product.volumePerMonth.toLocaleString()} pcs/month`
-                : "— pcs/month"}
+                ? `${product.volumePerMonth.toLocaleString()} vol/month`
+                : "— vol/month"}
             </p>
           </div>
-          <div className="text-right ml-2">
+          <div className="text-right ml-2 flex-shrink-0">
             <p className="text-stone-400 text-xs">{s.material || "—"}</p>
             <p className="text-stone-500 text-xs mt-0.5">
               {s.threadSize || "—"}
@@ -40,16 +40,29 @@ export default function ProductCard({ product, onView }) {
           </div>
         </div>
 
-        <div className="flex justify-between text-xs border-t border-neutral-800 pt-2 mt-2">
-          <div>
-            <p className="text-neutral-600 mb-0.5">Length</p>
-            <p className="text-stone-300">
-              {s.length ? `${s.length} mm` : "—"}
-            </p>
-          </div>
-          <div className="text-right">
-            <p className="text-stone-400">{s.heatTreatment || "—"}</p>
-            <p className="text-stone-500 mt-0.5">{s.surfaceTreatment || "—"}</p>
+        <div className="border-t border-neutral-800 pt-2 mt-2 space-y-1">
+          {/* Length + Heat/Surface on one line */}
+          <div className="flex justify-between text-xs">
+            <div>
+              <span className="text-neutral-600">
+                {s.length ? `${s.length} mm` : "—"}
+              </span>
+              {/* Location */}
+              <div className="flex items-center gap-1 text-xs">
+                <span className="text-stone-500">
+                  {Array.isArray(product.location) &&
+                  product.location.length > 0
+                    ? product.location.join(", ")
+                    : product.location || "—"}
+                </span>
+              </div>
+            </div>
+            <div className="text-right flex flex-col items-end">
+              <span className="text-stone-400">{s.heatTreatment || "—"}</span>
+              <span className="text-stone-500">
+                {s.surfaceTreatment || "—"}
+              </span>
+            </div>
           </div>
         </div>
       </div>
