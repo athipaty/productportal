@@ -44,7 +44,7 @@ export default function UploadExcel({ onUploaded }) {
       formData.append("file", file);
 
       const res = await fetch(
-        `https://center-kitchen-backend.onrender.com/upload/catalog`,
+        `${import.meta.env.VITE_API_BASE || "https://center-kitchen-backend.onrender.com"}/upload/catalog`,
         {
           method: "POST",
           body: formData,
