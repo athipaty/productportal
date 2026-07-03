@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { API_URL, CLOUD_NAME, UPLOAD_PRESET } from "../constants/api";
+import { API_URL, UPLOAD_URL } from "../constants/api";
 import Field from "./catalog/Field";
 import Logo from "../assets/logo.svg";
 
@@ -57,21 +57,11 @@ export default function AddProductForm() {
 
   const uploadToCloudinary = async (file) => {
     const data = new FormData();
-    data.append("file", file);
-    data.append("upload_preset", UPLOAD_PRESET);
-    const res = await fetch(
-      `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
-      { method: "POST", body: data },
-    );
+    data.append("image", file);
+    const res = await fetch(UPLOAD_URL, { method: "POST", body: data });
     const result = await res.json();
-    if (result.error) throw new Error(result.error.message);
-    return {
-      main: result.secure_url,
-      thumbnail: result.secure_url.replace(
-        "/upload/",
-        "/upload/w_200,h_200,c_fill/",
-      ),
-    };
+    if (result.message) throw new Error(result.message);
+    return { main: result.main, thumbnail: result.thumbnail };
   };
 
   const handleSubmit = async (e) => {
