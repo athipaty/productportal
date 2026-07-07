@@ -96,10 +96,13 @@ function PasswordGate({ onUnlock }) {
   );
 }
 
-function ComingSoon() {
+function ComingSoon({ big = false }) {
   return (
-    <div className="flex items-center justify-center h-full min-h-screen">
-      <p className="text-stone-400 text-lg tracking-widest">
+    <div className="flex flex-col items-center justify-center gap-6 h-full min-h-screen">
+      {big && <img src={Logo} alt="Product Portal" className="w-72" />}
+      <p
+        className={`text-stone-400 tracking-widest ${big ? "text-3xl md:text-5xl" : "text-lg"}`}
+      >
         On plan
         <span className="inline-flex gap-1 ml-1">
           <span
@@ -127,6 +130,11 @@ function ComingSoon() {
 }
 
 export default function App() {
+  return <ComingSoon big />;
+}
+
+// eslint-disable-next-line no-unused-vars
+function ProductPortalApp() {
   const [tab, setTab] = useState("list");
   const [category, setCategory] = useState("All");
   const [type, setType] = useState("All");
